@@ -36,11 +36,15 @@ else
 fi
 
 echo "▶ ۳) ایمیل تراکنشی"
-if [[ -z "${RESEND_API_KEY:-}" ]]; then
-  warn "RESEND_API_KEY تعریف نشده: تأیید ایمیل و بازیابی رمز ارسال نمی‌شوند (فقط در لاگ چاپ می‌شوند)."
-else
+if [[ -n "${SMTP_HOST:-}" ]]; then
+  ok "SMTP تنظیم شده است: ${SMTP_HOST}:${SMTP_PORT:-587}"
+  [[ -z "${SMTP_USER:-}" ]] && warn "SMTP_USER خالی است (اگر سرور SMTP احراز هویت می‌خواهد، پر کنید)."
+  [[ -z "${MAIL_FROM:-}" ]] && warn "MAIL_FROM تعریف نشده؛ از SMTP_USER استفاده می‌شود."
+elif [[ -n "${RESEND_API_KEY:-}" ]]; then
   ok "کلید Resend تنظیم شده است."
   [[ "${MAIL_FROM:-}" == *"resend.dev"* ]] && warn "MAIL_FROM روی دامنه آزمایشی resend.dev است؛ دامنه خودتان را تأیید کنید."
+else
+  warn "هیچ سرویس ایمیلی تنظیم نشده: تأیید ایمیل و بازیابی رمز فقط در لاگ چاپ می‌شوند."
 fi
 
 echo "▶ ۴) ورود با Google"

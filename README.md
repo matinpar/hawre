@@ -6,7 +6,7 @@
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/matinpar/hawre)
 &nbsp;
-**[🚀 راه‌اندازی روی سرور](docs/GO-LIVE.md)** · **[📱 اجرا با گوشی](docs/RUN-ON-PHONE.md)** · **[🎮 دموی آفلاین](docs/DEMO.html)** · **[🚀 استقرار با Docker](docs/DEPLOY.md)** · **[💰 هزینه‌ها](docs/COSTS.md)**
+**[🛒 لیست خرید (ایران)](docs/BUY-LIST-IRAN.md)** · **[🚀 راه‌اندازی روی سرور](docs/GO-LIVE.md)** · **[📱 اجرا با گوشی](docs/RUN-ON-PHONE.md)** · **[🎮 دموی آفلاین](docs/DEMO.html)** · **[🚀 استقرار با Docker](docs/DEPLOY.md)** · **[💰 هزینه‌ها](docs/COSTS.md)**
 
 </div>
 

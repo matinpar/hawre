@@ -1,12 +1,13 @@
 import 'server-only';
 
 /**
- * ارسال ایمیل تراکنشی.
+ * ارسال ایمیل تراکنشی با سه حالت (به‌ترتیب اولویت):
  *
- * ساده‌ترین و کم‌هزینه‌ترین گزینه انتخاب شده است: Resend از طریق REST API
- * (بدون نصب SDK، فقط یک fetch). اگر `RESEND_API_KEY` تعریف نشده باشد،
- * ایمیل ارسال نمی‌شود و محتوا فقط در کنسول سرور چاپ می‌گردد — دقیقاً مثل قبل،
- * تا پروژه بدون هیچ سرویس بیرونی هم کار کند.
+ *   ۱) SMTP  — اگر SMTP_HOST تعریف شده باشد (هر سرویسی: Gmail، میل‌سرور ایرانی، Zoho، …)
+ *   ۲) Resend — اگر RESEND_API_KEY تعریف شده باشد
+ *   ۳) هیچ‌کدام — فقط در کنسول سرور لاگ می‌شود (برای توسعه)
+ *
+ * این طراحی باعث می‌شود پروژه در هر کشوری و با هر سرویس ایمیلی کار کند.
  */
 
 const BRAND = 'هاوڕێ';
@@ -72,7 +73,32 @@ function toPlainText(html: string) {
     .trim();
 }
 
+/** ارسال با SMTP (nodemailer) — برای هر ارائه‌دهنده‌ای */
+async function sendSmtp(to: string, subject: string, html: string): Promise<MailResult> {
+  const host = process.env.SMTP_HOST!;
+  const port = Number(process.env.SMTP_PORT ?? 587);
+  const from = process.env.MAIL_FROM ?? process.env.SMTP_USER ?? 'no-reply@localhost';
+
+  try {
+    const { createTransport } = await import('nodemailer');
+    const transport = createTransport({
+      host,
+      port,
+      secure: port === 465, // 465 = SSL، 587 = STARTTLS
+      auth: process.env.SMTP_USER ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS ?? '' } : undefined,
+    });
+    await transport.sendMail({ from, to, subject, html, text: toPlainText(html) });
+    console.info(`[MAIL:SENT:SMTP] ${subject} → ${to}`);
+    return { sent: true };
+  } catch (err) {
+    console.error('[MAIL:ERROR:SMTP]', err);
+    return { sent: false, error: 'ارسال ایمیل با SMTP ناموفق بود' };
+  }
+}
+
 async function send(to: string, subject: string, html: string): Promise<MailResult> {
+  if (process.env.SMTP_HOST) return sendSmtp(to, subject, html);
+
   const key = process.env.RESEND_API_KEY;
   const from = process.env.MAIL_FROM ?? 'Hawre <onboarding@resend.dev>';
 
@@ -173,5 +199,12 @@ export function sendVerificationResultEmail(to: string, approved: boolean, note?
 }
 
 export function mailerConfigured() {
-  return !!process.env.RESEND_API_KEY;
+  return !!(process.env.SMTP_HOST || process.env.RESEND_API_KEY);
+}
+
+/** نام سرویس ایمیلِ فعال — برای نمایش در preflight و لاگ راه‌اندازی */
+export function mailerProvider(): 'smtp' | 'resend' | 'none' {
+  if (process.env.SMTP_HOST) return 'smtp';
+  if (process.env.RESEND_API_KEY) return 'resend';
+  return 'none';
 }
