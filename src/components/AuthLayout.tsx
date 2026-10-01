@@ -42,7 +42,7 @@ export default function AuthLayout({
             />
             <div className="relative">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1.5 text-xs font-bold backdrop-blur">
-                <IconSparkle size={14} /> نسخه آزمایشی و رایگان
+                <IconSparkle size={14} /> رایگان، بدون تبلیغات
               </span>
               <h2 className="mt-5 text-3xl font-extrabold leading-[1.5]">
                 آشنایی تازه،

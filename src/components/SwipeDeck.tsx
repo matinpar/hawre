@@ -402,7 +402,7 @@ export default function SwipeDeck({
           disabled={busy || !canUndo}
           aria-label="لغو آخرین انتخاب"
           className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full border border-slate-100 bg-white text-slate-400 shadow-soft transition hover:-translate-y-0.5 hover:text-slate-600 active:scale-95 disabled:opacity-40"
-          title="لغو آخرین انتخاب (فقط نسخه آزمایشی)"
+          title="لغو آخرین انتخاب"
         >
           <IconUndo size={20} />
         </button>

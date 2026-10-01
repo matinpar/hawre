@@ -89,7 +89,7 @@ export default function LandingContent() {
           <div className="animate-floatUp text-center lg:text-right">
             <span className="nv-pill">
               <IconSparkle size={14} />
-              {t('نسخه آزمایشی و کاملاً رایگان')}
+              {t('رایگان، بدون تبلیغات، بدون اشتراک')}
             </span>
 
             <h1 className="mx-auto mt-5 max-w-xl text-[2.1rem] font-extrabold leading-[1.4] tracking-tight text-ink sm:text-[2.7rem] lg:mx-0 lg:text-[3.2rem] lg:leading-[1.3]">
@@ -243,7 +243,7 @@ export default function LandingContent() {
             </span>
             <h2 className="mb-2.5 mt-4 text-xl font-extrabold text-ink">{t('امنیت و حریم خصوصی')}</h2>
             <p className="text-sm leading-7 text-slate-500">
-              {t('این یک نسخه آزمایشی است')} — {t('هاوڕێ صرفاً برای نمایش و آزمایش ساخته شده و داده‌های آن ساختگی‌اند.')}
+              {t('حریم خصوصی شما برای ما اصل است؛ داده‌های شما فروخته یا با کسی به اشتراک گذاشته نمی‌شود.')}
             </p>
             <div className="mt-5 flex flex-wrap gap-3 text-sm font-bold">
               <Link href="/terms" className="text-brand-700 underline underline-offset-4 hover:text-brand-600">
@@ -286,7 +286,7 @@ export default function LandingContent() {
           <span className="inline-flex flex-col items-center gap-1 sm:items-start">
             <span className="inline-flex items-center gap-2">
               <Logo size="sm" withText={false} />
-              هاوڕێ — پروژه آزمایشی آشنایی آنلاین
+              هاوڕێ — آشنایی ساده و امن
             </span>
             <span className="text-2xs font-bold text-slate-400">ساخته شده توسط عبدالمتین پرچین</span>
             <span className="mt-1 sm:hidden">

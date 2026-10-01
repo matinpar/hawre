@@ -17,7 +17,7 @@ export default function LegalPage({
       <main id="main" className="mx-auto max-w-3xl px-4 pb-16">
         <div className="nv-card p-6 sm:p-9">
           <h1 className="text-2xl font-extrabold text-ink">{title}</h1>
-          <p className="mt-2 text-xs text-slate-400">آخرین به‌روزرسانی: نسخه آزمایشی</p>
+          <p className="mt-2 text-xs text-slate-400">آخرین به‌روزرسانی: مهر ۱۴۰۵</p>
           <div className="mt-7 space-y-6">
             {sections.map((s) => (
               <section key={s.title}>

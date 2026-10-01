@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'هاوڕێ — آشنایی ساده و امن',
     short_name: 'هاوڕێ',
-    description: 'پلتفرم آزمایشی آشنایی آنلاین؛ پروفایل بسازید، افراد هم‌سلیقه را ببینید و در صورت علاقه دوطرفه گفت‌وگو کنید.',
+    description: 'فضایی ساده و امن برای آشنایی؛ پروفایل بسازید، افراد هم‌سلیقه را ببینید و در صورت علاقه دوطرفه گفت‌وگو کنید.',
     lang: 'fa',
     dir: 'rtl',
     start_url: '/discover',

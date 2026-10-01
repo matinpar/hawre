@@ -108,6 +108,12 @@ const PEOPLE: SeedPerson[] = [
   { name: 'آریا', email: 'aria@hawre.test', gender: 'OTHER', preferredGender: 'ANY', birthDate: '1996-10-11', city: 'تهران', bio: 'نوازنده نیمه‌حرفه‌ای و عاشق کتاب‌فروشی‌های قدیمی.', interests: ['موسیقی', 'کتاب', 'تئاتر'] },
 ];
 
+// محافظ: داده آزمایشی هرگز نباید روی سرور واقعی اجرا شود
+if (process.env.NODE_ENV === 'production' && process.env.ALLOW_SEED_IN_PRODUCTION !== 'true') {
+  console.error('⛔ اجرای seed در Production مسدود است. در صورت نیاز ALLOW_SEED_IN_PRODUCTION=true بگذارید.');
+  process.exit(1);
+}
+
 async function main() {
   const adminEmail = (process.env.ADMIN_EMAIL ?? 'admin@hawre.test').toLowerCase();
   const adminPassword = process.env.ADMIN_PASSWORD;

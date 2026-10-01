@@ -1,17 +1,25 @@
 import type { MetadataRoute } from 'next';
 
 /**
- * نسخه آزمایشی است و ایندکس نمی‌شود؛ صفحات خصوصی هم صراحتاً مسدود شده‌اند.
- * برای انتشار عمومی کافی است disallow را به مسیرهای خصوصی محدود کنید.
+ * در Production صفحات عمومی ایندکس می‌شوند و مسیرهای خصوصی مسدود می‌مانند.
+ * برای خاموش‌کردن موقت ایندکس (مثلاً هنگام راه‌اندازی) کافی است
+ * متغیر محیطی DISABLE_INDEXING=true تنظیم شود.
  */
 export default function robots(): MetadataRoute.Robots {
-  const base = process.env.APP_URL ?? 'http://localhost:3000';
-  const isProd = process.env.NODE_ENV === 'production' && process.env.PUBLIC_INDEXING === 'true';
+  const base = (process.env.APP_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+  const live = process.env.NODE_ENV === 'production' && process.env.DISABLE_INDEXING !== 'true';
 
   return {
-    rules: isProd
-      ? [{ userAgent: '*', allow: '/', disallow: ['/api/', '/admin', '/discover', '/matches', '/chat', '/profile', '/settings'] }]
+    rules: live
+      ? [
+          {
+            userAgent: '*',
+            allow: '/',
+            disallow: ['/api/', '/admin', '/discover', '/matches', '/chat', '/profile', '/settings', '/onboarding'],
+          },
+        ]
       : [{ userAgent: '*', disallow: '/' }],
     sitemap: `${base}/sitemap.xml`,
+    host: base,
   };
 }

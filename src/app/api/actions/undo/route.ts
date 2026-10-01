@@ -4,7 +4,7 @@ import { orderPair } from '@/lib/matching';
 
 export const dynamic = 'force-dynamic';
 
-/** لغو آخرین انتخاب — فقط در نسخه آزمایشی */
+/** لغو آخرین انتخاب کاربر */
 export async function POST() {
   return handle(async () => {
     const me = await requireCompleteProfile();

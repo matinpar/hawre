@@ -5,11 +5,15 @@ import { I18nProvider } from '@/lib/i18n';
 export const metadata: Metadata = {
   title: 'هاوڕێ | آشنایی ساده و امن',
   description:
-    'هاوڕێ یک پلتفرم آزمایشی و رایگان آشنایی آنلاین است؛ پروفایل بسازید، افراد هم‌سلیقه را ببینید و در صورت علاقه دوطرفه گفت‌وگو کنید.',
+    'هاوڕێ فضایی ساده و امن برای آشنایی است؛ پروفایل بسازید، افراد هم‌سلیقه را ببینید و در صورت علاقه دوطرفه گفت‌وگو کنید.',
   authors: [{ name: 'عبدالمتین پرچین' }],
   creator: 'عبدالمتین پرچین',
   applicationName: 'Hawre',
-  robots: { index: false, follow: false },
+  metadataBase: new URL(process.env.APP_URL ?? 'http://localhost:3000'),
+  robots:
+    process.env.NODE_ENV === 'production' && process.env.DISABLE_INDEXING !== 'true'
+      ? { index: true, follow: true }
+      : { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
