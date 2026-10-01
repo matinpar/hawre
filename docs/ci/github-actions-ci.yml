@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quality:
+    name: بررسی کیفیت کد و ساخت
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "file:./ci.db"
+      AUTH_SECRET: "ci-placeholder-secret-at-least-32-characters"
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: نصب وابستگی‌ها
+        run: npm ci
+
+      - name: تولید Prisma Client
+        run: npx prisma generate
+
+      - name: بررسی نوع‌ها (TypeScript)
+        run: npm run typecheck
+
+      - name: بررسی ESLint
+        run: npm run lint
+
+      - name: آماده‌سازی دیتابیس آزمایشی
+        run: npx prisma migrate deploy
+
+      - name: ساخت نسخه Production
+        run: npm run build
+
+  docker:
+    name: ساخت ایمیج داکر
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: ساخت ایمیج
+        run: docker build -t hawre:ci .

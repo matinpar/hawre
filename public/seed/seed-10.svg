@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c92249"/><stop offset="100%" stop-color="#ffa93c"/>
+    </linearGradient>
+    <radialGradient id="b1" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#ffd2a1" stop-opacity=".95"/>
+      <stop offset="100%" stop-color="#ffd2a1" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="b2" cx="50%" cy="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="28"/></filter>
+  </defs>
+  <rect width="600" height="800" fill="url(#g)"/>
+  <circle cx="233" cy="263" r="230" fill="url(#b1)"/>
+  <circle cx="397" cy="597" r="260" fill="url(#b2)"/>
+  <g filter="url(#soft)" opacity=".35">
+    <circle cx="283" cy="430" r="150" fill="#ffd2a1"/>
+  </g>
+  <g opacity=".22" stroke="#ffffff" stroke-width="2" fill="none">
+    <circle cx="300" cy="400" r="150"/><circle cx="300" cy="400" r="205"/><circle cx="300" cy="400" r="260"/>
+  </g>
+  <text x="300" y="450" font-size="210" font-family="Tahoma, Verdana, sans-serif" font-weight="bold"
+        text-anchor="middle" fill="rgba(255,255,255,.92)">س</text>
+  <rect x="0" y="640" width="600" height="160" fill="rgba(23,19,43,.18)"/>
+</svg>

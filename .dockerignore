@@ -1,0 +1,17 @@
+node_modules
+.next
+.git
+.gitignore
+docs/screenshots
+docs/GALLERY.html
+*.log
+.env
+.env.local
+.env.production
+prisma/dev.db
+prisma/dev.db-journal
+public/uploads/*
+!public/uploads/.gitkeep
+public/seed/*
+!public/seed/.gitkeep
+docker/certbot

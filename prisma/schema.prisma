@@ -1,0 +1,237 @@
+// Hawre — schema پایگاه داده
+// پیش‌فرض: SQLite (ساده‌ترین و کم‌هزینه‌ترین گزینه برای MVP آزمایشی)
+// برای PostgreSQL کافی است provider را به "postgresql" تغییر دهید (توضیح در README).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String?
+  authProvider  String   @default("EMAIL") // EMAIL | GOOGLE | BOTH
+  googleId      String?  @unique
+  emailVerified Boolean  @default(false)
+  role          String   @default("USER") // USER | ADMIN
+  accountStatus String   @default("ACTIVE") // ACTIVE | DISABLED | DELETED
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  lastActiveAt  DateTime @default(now())
+
+  profile        Profile?
+  photos         ProfilePhoto[]
+  tokens         Token[]
+  settings       Settings?
+  actionsFrom    UserAction[]   @relation("actionFrom")
+  actionsTo      UserAction[]   @relation("actionTo")
+  matchesAsOne   Match[]        @relation("matchUserOne")
+  matchesAsTwo   Match[]        @relation("matchUserTwo")
+  messagesSent   Message[]      @relation("msgSender")
+  messagesRecv   Message[]      @relation("msgReceiver")
+  blocksMade     Block[]        @relation("blocker")
+  blocksReceived Block[]        @relation("blocked")
+  reportsMade    Report[]       @relation("reporter")
+  reportsAgainst Report[]       @relation("reported")
+  notifications  Notification[]
+  verification   Verification?  @relation("verificationOwner")
+  reviewedVerifications Verification[] @relation("verificationReviewer")
+
+  @@index([accountStatus])
+  @@index([createdAt])
+}
+
+model Profile {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  displayName      String
+  birthDate        DateTime
+  gender           String // MALE | FEMALE | OTHER
+  preferredGender  String // MALE | FEMALE | ANY
+  city             String
+  bio              String   @default("")
+  interests        String   @default("") // CSV
+  ageMin           Int      @default(18)
+  ageMax           Int      @default(60)
+  maxDistance      Int      @default(50)
+  profileCompleted Boolean  @default(false)
+  isVerified       Boolean  @default(false) // نشان «پروفایل تأییدشده»
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([gender])
+  @@index([city])
+  @@index([profileCompleted])
+}
+
+model ProfilePhoto {
+  id        String   @id @default(cuid())
+  userId    String
+  imageUrl  String
+  isPrimary Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, sortOrder])
+}
+
+model UserAction {
+  id         String   @id @default(cuid())
+  fromUserId String
+  toUserId   String
+  actionType String // LIKE | PASS
+  createdAt  DateTime @default(now())
+
+  fromUser User @relation("actionFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser   User @relation("actionTo", fields: [toUserId], references: [id], onDelete: Cascade)
+
+  @@unique([fromUserId, toUserId])
+  @@index([toUserId, actionType])
+}
+
+model Match {
+  id            String    @id @default(cuid())
+  userOneId     String // همیشه شناسه کوچک‌تر (ترتیب لغوی) → جلوگیری از رکورد تکراری
+  userTwoId     String
+  status        String    @default("ACTIVE") // ACTIVE | UNMATCHED
+  createdAt     DateTime  @default(now())
+  lastMessageAt DateTime?
+  // آخرین لحظه‌ای که هر طرف در حال تایپ بوده (برای نشانگر «در حال نوشتن…»)
+  oneTypingAt   DateTime?
+  twoTypingAt   DateTime?
+
+  userOne  User      @relation("matchUserOne", fields: [userOneId], references: [id], onDelete: Cascade)
+  userTwo  User      @relation("matchUserTwo", fields: [userTwoId], references: [id], onDelete: Cascade)
+  messages Message[]
+
+  @@unique([userOneId, userTwoId])
+  @@index([userOneId])
+  @@index([userTwoId])
+  @@index([lastMessageAt])
+}
+
+model Message {
+  id         String    @id @default(cuid())
+  matchId    String
+  senderId   String
+  receiverId String
+  content    String
+  isRead     Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
+
+  match    Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  sender   User  @relation("msgSender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User  @relation("msgReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([matchId, createdAt])
+  @@index([receiverId, isRead])
+}
+
+model Block {
+  id        String   @id @default(cuid())
+  blockerId String
+  blockedId String
+  createdAt DateTime @default(now())
+
+  blocker User @relation("blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation("blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+  @@index([blockedId])
+}
+
+model Report {
+  id             String   @id @default(cuid())
+  reporterId     String
+  reportedUserId String
+  reason         String // INAPPROPRIATE | FAKE | HARASSMENT | SCAM | THREAT | OTHER
+  description    String   @default("")
+  status         String   @default("PENDING") // PENDING | REVIEWING | RESOLVED | REJECTED
+  createdAt      DateTime @default(now())
+
+  reporter User @relation("reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  reported User @relation("reported", fields: [reportedUserId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt])
+  @@index([reportedUserId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String // MATCH | MESSAGE | SYSTEM
+  title     String
+  body      String   @default("")
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+}
+
+// درخواست تأیید هویت سبک: کاربر یک سلفیِ ژست‌دار می‌فرستد و مدیر بررسی می‌کند.
+// پس از بررسی، فایل سلفی حذف می‌شود و فقط وضعیت باقی می‌ماند.
+model Verification {
+  id         String    @id @default(cuid())
+  userId     String    @unique
+  status     String    @default("PENDING") // PENDING | APPROVED | REJECTED
+  gesture    String // ژست خواسته‌شده (مثلاً «دست راست کنار گوش»)
+  selfieUrl  String? // پس از بررسی حذف و null می‌شود
+  note       String    @default("")
+  createdAt  DateTime  @default(now())
+  reviewedAt DateTime?
+  reviewerId String?
+
+  user     User  @relation("verificationOwner", fields: [userId], references: [id], onDelete: Cascade)
+  reviewer User? @relation("verificationReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+}
+
+model Settings {
+  id             String  @id @default(cuid())
+  userId         String  @unique
+  showDistance   Boolean @default(true)
+  notifyMatches  Boolean @default(true)
+  notifyMessages Boolean @default(true)
+  discoverable   Boolean @default(true)
+  // نمایش وضعیت آنلاین/آخرین بازدید به کسانی که با آن‌ها آشنایی دوطرفه دارید
+  showOnline     Boolean @default(true)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// توکن‌های یکبارمصرف: تأیید ایمیل و بازیابی رمز عبور (هش‌شده ذخیره می‌شوند)
+model Token {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  type      String // VERIFY_EMAIL | RESET_PASSWORD
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+}
+
+model RateLimit {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  count     Int      @default(0)
+  windowEnd DateTime
+
+  @@index([windowEnd])
+}

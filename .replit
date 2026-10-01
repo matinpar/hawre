@@ -1,0 +1,20 @@
+# پیکربندی Replit — اجرای پروژه فقط با زدن دکمه Run
+run = "bash start.sh"
+entrypoint = "README.md"
+modules = ["nodejs-20"]
+
+[nix]
+channel = "stable-24_05"
+
+[env]
+NEXT_TELEMETRY_DISABLED = "1"
+HOST = "0.0.0.0"
+PORT = "3000"
+
+[[ports]]
+localPort = 3000
+externalPort = 80
+
+[deployment]
+run = ["sh", "-c", "npm run build && npm run start -- -H 0.0.0.0 -p 3000"]
+build = ["sh", "-c", "npm install && npx prisma generate && npx prisma migrate deploy"]

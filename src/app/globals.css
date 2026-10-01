@@ -1,0 +1,312 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #fdf6f2;
+  --ink: #2a1427;
+  --ring: rgba(249, 92, 75, 0.35);
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Vazirmatn, 'Vazir', 'IRANSans', Tahoma, 'Segoe UI', system-ui, sans-serif;
+  font-feature-settings: 'ss01', 'ss02';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* پس‌زمینه نرم و لایه‌ای برای همه صفحات */
+.nv-bg {
+  position: relative;
+  background:
+    radial-gradient(60rem 40rem at 88% -10%, rgba(255, 169, 60, 0.20), transparent 60%),
+    radial-gradient(45rem 35rem at 5% 8%, rgba(249, 92, 75, 0.16), transparent 62%),
+    radial-gradient(38rem 30rem at 70% 100%, rgba(140, 82, 128, 0.10), transparent 65%),
+    linear-gradient(180deg, #fffaf7 0%, var(--bg) 42%, #fbeee7 100%);
+}
+
+*:focus-visible {
+  outline: 3px solid #ff7d63;
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer components {
+  /* ---------- سطوح ---------- */
+  .nv-card {
+    @apply rounded-[1.75rem] border border-white/70 bg-white shadow-soft;
+  }
+  .nv-card-glass {
+    @apply rounded-[1.75rem] border border-white/60 bg-white/75 shadow-soft backdrop-blur-xl;
+  }
+  .nv-card-hover {
+    @apply transition duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card;
+  }
+
+  /* ---------- دکمه‌ها ---------- */
+  .nv-btn {
+    @apply relative inline-flex select-none items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold
+           transition duration-200 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[.97];
+  }
+  .nv-btn-primary {
+    @apply nv-btn bg-brand-grad text-white shadow-glow
+           hover:shadow-lift hover:brightness-[1.06] disabled:hover:shadow-glow;
+  }
+  .nv-btn-secondary {
+    @apply nv-btn border border-brand-200/80 bg-white/90 text-brand-700 shadow-soft
+           hover:border-brand-300 hover:bg-brand-50;
+  }
+  .nv-btn-ghost {
+    @apply nv-btn text-slate-600 hover:bg-slate-900/[.05] hover:text-ink;
+  }
+  .nv-btn-danger {
+    @apply nv-btn bg-coral-500 text-white shadow-glowCoral hover:bg-coral-600;
+  }
+
+  /* ---------- فرم ---------- */
+  .nv-input {
+    @apply w-full rounded-2xl border border-slate-200/90 bg-white px-4 py-3 text-sm text-ink shadow-[0_1px_2px_rgba(23,19,43,.04)]
+           outline-none transition placeholder:text-slate-400
+           hover:border-slate-300 focus:border-brand-400 focus:ring-4 focus:ring-brand-100;
+  }
+  .nv-label {
+    @apply mb-2 block text-sm font-bold text-slate-700;
+  }
+  .nv-hint {
+    @apply mt-1.5 text-xs leading-6 text-slate-400;
+  }
+
+  /* ---------- نشان‌ها ---------- */
+  .nv-chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-brand-100 bg-brand-50/90 px-3 py-1 text-xs font-bold text-brand-700;
+  }
+  .nv-pill {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-white/70 bg-white/80 px-3 py-1.5 text-xs font-bold text-brand-700 shadow-soft backdrop-blur;
+  }
+
+  /* ---------- پیام‌ها ---------- */
+  .nv-error {
+    @apply flex items-start gap-2 rounded-2xl border border-coral-200 bg-coral-50 px-4 py-3 text-sm font-bold text-coral-700;
+  }
+  .nv-success {
+    @apply flex items-start gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700;
+  }
+
+  /* ---------- اسکلت بارگذاری ---------- */
+  .nv-skeleton {
+    @apply relative overflow-hidden rounded-2xl bg-plum-100/70;
+  }
+  .nv-skeleton::after {
+    content: '';
+    @apply absolute inset-0 animate-shimmer;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+  }
+
+  /* ---------- تیتر صفحه ---------- */
+  .nv-title {
+    @apply text-2xl font-extrabold tracking-tight text-ink;
+  }
+  .nv-subtitle {
+    @apply mt-1 text-sm leading-7 text-slate-500;
+  }
+  .nv-gradient-text {
+    @apply bg-brand-grad bg-clip-text text-transparent;
+  }
+}
+
+/* کارت سوایپ */
+.swipe-card {
+  touch-action: pan-y;
+  will-change: transform;
+}
+
+/* خط جداکننده نرم */
+.nv-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(249, 92, 75, 0.20), transparent);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #f3cfc2;
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #e8b19d;
+  background-clip: content-box;
+}
+
+/* ============================================================
+   حالت تاریک
+   رنگ‌ها یک‌جا اینجا بازتعریف می‌شوند تا نیازی به افزودن
+   کلاس dark: در تک‌تک کامپوننت‌ها نباشد.
+   ============================================================ */
+.dark {
+  --bg: #170a15;
+  --ink: #fbeef6;
+  --ring: rgba(255, 125, 99, 0.45);
+  color-scheme: dark;
+}
+
+.dark body {
+  color: var(--ink);
+}
+
+.dark .nv-bg {
+  background:
+    radial-gradient(60rem 40rem at 88% -10%, rgba(255, 169, 60, 0.13), transparent 60%),
+    radial-gradient(45rem 35rem at 5% 8%, rgba(249, 92, 75, 0.14), transparent 62%),
+    radial-gradient(38rem 30rem at 70% 100%, rgba(140, 82, 128, 0.18), transparent 65%),
+    linear-gradient(180deg, #1d0d1a 0%, var(--bg) 45%, #120811 100%);
+}
+
+/* ---------- سطوح ---------- */
+.dark .nv-card,
+.dark .bg-white {
+  background-color: #241128;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.dark .nv-card-glass,
+.dark .bg-white\/90,
+.dark .bg-white\/85,
+.dark .bg-white\/80,
+.dark .bg-white\/75,
+.dark .bg-white\/70,
+.dark .bg-white\/60,
+.dark .bg-white\/50 {
+  background-color: rgba(36, 17, 40, 0.78);
+  border-color: rgba(255, 255, 255, 0.09);
+}
+.dark .bg-mist,
+.dark .bg-slate-50\/70,
+.dark .bg-slate-50,
+.dark .bg-slate-100,
+.dark .bg-plum-50,
+.dark .bg-plum-100,
+.dark .bg-plum-100\/70 {
+  background-color: #2e1832;
+}
+.dark .bg-brand-50,
+.dark .bg-coral-50,
+.dark .bg-amber-50 {
+  background-color: rgba(249, 92, 75, 0.14);
+}
+
+/* ---------- متن ---------- */
+.dark .text-ink {
+  color: #fbeef6;
+}
+.dark .text-slate-700,
+.dark .text-slate-600 {
+  color: #e3d2df;
+}
+.dark .text-slate-500 {
+  color: #bda8ba;
+}
+.dark .text-slate-400 {
+  color: #9b869a;
+}
+.dark .text-brand-700 {
+  color: #ff9b85;
+}
+.dark .text-plum-700,
+.dark .text-plum-900 {
+  color: #e7cfe4;
+}
+
+/* ---------- خط و حاشیه ---------- */
+.dark .border-slate-100,
+.dark .border-slate-200,
+.dark .border-white\/70,
+.dark .border-white\/60,
+.dark .nv-divider {
+  border-color: rgba(255, 255, 255, 0.10);
+}
+.dark .nv-divider {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+}
+
+/* ---------- فرم‌ها ---------- */
+.dark .nv-input {
+  background-color: #2e1832;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #fbeef6;
+}
+.dark .nv-input::placeholder {
+  color: #9b869a;
+}
+.dark .nv-btn-secondary {
+  background-color: #2e1832;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f3e3ef;
+}
+.dark .nv-btn-ghost:hover,
+.dark .hover\:bg-slate-100:hover,
+.dark .hover\:bg-white\/70:hover {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+.dark .nv-chip,
+.dark .nv-pill {
+  background-color: rgba(255, 125, 99, 0.12);
+  border-color: rgba(255, 125, 99, 0.25);
+  color: #ffb9a7;
+}
+.dark .hover\:bg-brand-50:hover {
+  background-color: rgba(249, 92, 75, 0.16);
+}
+.dark .hover\:text-brand-700:hover {
+  color: #ffb9a7;
+}
+.dark .border-coral-100,
+.dark .border-brand-200,
+.dark .border-brand-100 {
+  border-color: rgba(255, 125, 99, 0.25);
+}
+.dark kbd.bg-white {
+  color: #e3d2df;
+}
+.dark .nv-skeleton {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+
+/* ---------- سایه‌ها در تاریکی نرم‌تر ---------- */
+.dark .shadow-soft {
+  box-shadow: 0 18px 45px -22px rgba(0, 0, 0, 0.85);
+}
+.dark .bg-slate-900\/\[\.04\] {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* اسکرول‌بار */
+.dark ::-webkit-scrollbar-track {
+  background: #1d0d1a;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #4a2a46;
+}
